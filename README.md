@@ -14,6 +14,13 @@
    ```
 3. Open [http://localhost:3000/](http://localhost:3000/) in your browser.
 
+4. Alternatively, you can also test the API directly to `http://localhost:3000/api/words?letters={LETTERS}&word={BASIC_WORDS}`
+
+```json
+> http://localhost:3000/api/words?letters=AIDOORW&word=WIZ
+> {"words":[{"word":"wizard","score":19}]}
+```
+
 The dev server runs with hot reload—changes to the code will auto-refresh in the browser.
 
 ## Running Tests
