@@ -1,10 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
-import { findWords } from './words.server'
-
-export type FindWordsInput = {
-  letters: string
-  word?: string
-}
+import { findWords } from 'server/lib/words'
+import type { FindWordsInput } from 'server/types'
 
 export const getWords = createServerFn({ method: 'GET' })
   .inputValidator((data: FindWordsInput) => ({
