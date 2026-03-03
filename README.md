@@ -2,7 +2,7 @@
 
 ## Dictionnary
 
-For english dictionnaty, I've decide to use the official [NASPA Word List](https://www.wordgamedictionary.com/twl06/), as it's the official word authority for tournament Scrabble in the USA and Canada.
+For english dictionnaty, I've decide to use the official [Collins Scrabble Words (2019)](https://en.wikipedia.org/wiki/Collins_Scrabble_Words), as it's the official word authority for tournament Scrabble in the USA and Canada.
 
 ## Score calculation
 
