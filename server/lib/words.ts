@@ -81,7 +81,7 @@ function checkTileDistribution(
     const limit = letterData[letter].count
 
     if (total > limit) {
-      return `Letter "${letter}" appears ${total} time(s) (rack + board word) but only ${limit} tile(s) exist in the game`
+      return `Letter "${letter}" exceeds usage limit: ${total} used, ${limit} available`
     }
   }
   
@@ -99,7 +99,7 @@ export function findWords(data: FindWordsInput): FindWordsResult {
     .toLowerCase()
 
   if (letters.length > MAX_LETTERS) {
-    return { words: [], message: `You cannot exceed ${MAX_LETTERS} letters` }
+    return { words: [], message: `You cannot exceed ${MAX_LETTERS} letters in your rack` }
   }
 
   if (!letters || letters.length === 0) {
