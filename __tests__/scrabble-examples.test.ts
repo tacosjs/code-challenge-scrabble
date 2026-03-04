@@ -24,24 +24,30 @@ describe('Scrabble examples', () => {
     )
   })
 
-  it('Should return no words and a message about Z tile limit because Z appears in both rack and board word (exceeds single Z tile)', () => {
-    const result = findWords({
-      letters: 'AIDOORZ',
-      word: 'QUIZ',
-    })
-
-    expect(result.words).toHaveLength(0)
-    expect(result.message).toBeDefined()
-    expect(result.message).toMatch(/(?=.*Z)(?=.*exceed)(?=.*limit)/i)
+  it('Should throw about Z tile limit because Z appears in both rack and board word (exceeds single Z tile)', () => {
+    expect(() =>
+      findWords({
+        letters: 'AIDOORZ',
+        word: 'QUIZ',
+      }),
+    ).toThrow(/Z.*exceed.*limit/i)
   })
 
-  it('Should return no words and a message about maximum because rack has 8 letters (exceeds 7-letter limit)', () => {
-    const result = findWords({
-      letters: 'AIDOORWZ',
-    })
-
-    expect(result.words).toHaveLength(0)
-    expect(result.message).toBeDefined()
-    expect(result.message).toMatch(/(?=.*7)(?=.*exceed)(?=.*rack)/i)
+  it('Should throw about maximum because rack has 8 letters (exceeds 7-letter limit)', () => {
+    expect(() =>
+      findWords({
+        letters: 'AIDOORWZ',
+      }),
+    ).toThrow(/7.*exceed|exceed.*7|rack/i)
   })
+
+  it('Should throw about no words available if no words can be formed', () => {
+    expect(() =>
+      findWords({
+        letters: 'AIDOORW',
+        word: 'XYZ',
+      }),
+    ).toThrow(/no words available/i)
+  })
+
 })

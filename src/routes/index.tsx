@@ -5,7 +5,13 @@ import type { FindWordsInput } from 'server/types'
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
-  const { mutate, data, isPending, isError } = useGetWordsMutation()
+  const {
+    mutate: mutateWords,
+    data,
+    isPending,
+    isError,
+    error,
+  } = useGetWordsMutation()
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -13,10 +19,10 @@ function App() {
 
     const input: FindWordsInput = {
       letters: formData.get('letters') as string,
-      word: formData.get('word') as string,
+      word: formData.get('word') as string | undefined,
     }
 
-    mutate(input)
+    mutateWords(input)
   }
 
   return (
@@ -31,10 +37,9 @@ function App() {
       </form>
 
       {isPending && <div>Loading...</div>}
-      {isError ||
-        (data?.message && (
-          <div className="text-red-500">Error: {data.message}</div>
-        ))}
+      {isError && (
+        <div className="text-red-500">Error: {error.message}</div>
+      )}
       {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
     </main>
   )
