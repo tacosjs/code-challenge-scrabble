@@ -12,7 +12,7 @@ export type FindWordsInput = {
 }
 
 /**
- * Result of the find words API
+ * Result of the find words API.
  * It can contain an array of words and their scores, or a message if there is an error.
  */
 export type FindWordsResult = {

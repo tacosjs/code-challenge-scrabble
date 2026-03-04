@@ -1,5 +1,5 @@
 import { defineEventHandler, getQuery } from 'nitro/h3'
-import { findWords } from '../lib/words'
+import { findWords } from '../utils/words'
 
 export default defineEventHandler((event) => {
   const query = getQuery(event)

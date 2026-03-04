@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findWords } from '../server/lib/words'
+import { findWords } from 'server/utils/words'
 
 describe('Scrabble examples', () => {
   it('Should return wizard with 19 points because rack AIDOORW and board word WIZ form WIZARD', () => {
