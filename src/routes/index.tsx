@@ -37,9 +37,7 @@ function App() {
       </form>
 
       {isPending && <div>Loading...</div>}
-      {isError && (
-        <div className="text-red-500">Error: {error.message}</div>
-      )}
+      {isError && <div className="text-red-500">Error: {error.message}</div>}
       {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
     </main>
   )

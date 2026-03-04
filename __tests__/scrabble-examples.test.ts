@@ -49,5 +49,4 @@ describe('Scrabble examples', () => {
       }),
     ).toThrow(/no words available/i)
   })
-
 })
