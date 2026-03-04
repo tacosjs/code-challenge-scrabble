@@ -19,7 +19,9 @@ describe('Scrabble examples', () => {
 
     expect(result.words.length).toBeGreaterThan(0)
     expect(result.words[0].word).toBe('dowar')
-    expect(result.words.map((x) => x.word)).toEqual(expect.arrayContaining(['draw', 'ward', 'wood']))
+    expect(result.words.map((x) => x.word)).toEqual(
+      expect.arrayContaining(['draw', 'ward', 'wood']),
+    )
   })
 
   it('Should return no words and a message about Z tile limit because Z appears in both rack and board word (exceeds single Z tile)', () => {

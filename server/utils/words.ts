@@ -37,7 +37,10 @@ function countLetters(str: string): Map<string, number> {
  * Returns true if the word can be formed using only letters from the rack.
  * Rack counts use uppercase keys (A–Z).
  */
-function isFormableFromRack(word: string, rackCounts: Map<string, number>): boolean {
+function isFormableFromRack(
+  word: string,
+  rackCounts: Map<string, number>,
+): boolean {
   const wordCounts = countLetters(word)
   for (const [letter, count] of wordCounts) {
     const available = rackCounts.get(letter) ?? 0
@@ -58,7 +61,10 @@ function calculateWordScore(word: string, letterData: LetterData): number {
  * The starter is a mandatory substring that must appear in the word. Returns null
  * if the starter is not found in the word.
  */
-function extractLettersNeededFromRack(fullWord: string, starter: string): string | null {
+function extractLettersNeededFromRack(
+  fullWord: string,
+  starter: string,
+): string | null {
   const idx = fullWord.indexOf(starter)
   if (idx === -1) return null
 
@@ -71,7 +77,7 @@ function extractLettersNeededFromRack(fullWord: string, starter: string): string
 function checkTileDistribution(
   rackCounts: Map<string, number>,
   starterCounts: Map<string, number>,
-  letterData: LetterData
+  letterData: LetterData,
 ): string | null {
   const allLetters = new Set([...rackCounts.keys(), ...starterCounts.keys()])
   for (const letter of allLetters) {
@@ -84,7 +90,7 @@ function checkTileDistribution(
       return `Letter "${letter}" exceeds usage limit: ${total} used, ${limit} available`
     }
   }
-  
+
   return null
 }
 
@@ -94,12 +100,13 @@ function checkTileDistribution(
  */
 export function findWords(data: FindWordsInput): FindWordsResult {
   const letters = data.letters.replace(/[^a-zA-Z]/g, '')
-  const starter = (data.word ?? '')
-    .replace(/[^a-zA-Z]/g, '')
-    .toLowerCase()
+  const starter = (data.word ?? '').replace(/[^a-zA-Z]/g, '').toLowerCase()
 
   if (letters.length > MAX_LETTERS) {
-    return { words: [], message: `You cannot exceed ${MAX_LETTERS} letters in your rack` }
+    return {
+      words: [],
+      message: `You cannot exceed ${MAX_LETTERS} letters in your rack`,
+    }
   }
 
   if (!letters || letters.length === 0) {
@@ -112,7 +119,11 @@ export function findWords(data: FindWordsInput): FindWordsResult {
 
   if (starter) {
     const starterCounts = countLetters(starter)
-    const tileError = checkTileDistribution(rackCounts, starterCounts, letterData)
+    const tileError = checkTileDistribution(
+      rackCounts,
+      starterCounts,
+      letterData,
+    )
     if (tileError) {
       return { words: [], message: tileError }
     }
@@ -127,11 +138,14 @@ export function findWords(data: FindWordsInput): FindWordsResult {
 
     if (!lettersNeededFromRack) continue
     if (isFormableFromRack(lettersNeededFromRack, rackCounts)) {
-      results.push({ word: dictWord, score: calculateWordScore(dictWord, letterData) })
+      results.push({
+        word: dictWord,
+        score: calculateWordScore(dictWord, letterData),
+      })
     }
   }
 
   results.sort((a, b) => b.score - a.score || a.word.localeCompare(b.word))
-  
+
   return { words: results }
 }
