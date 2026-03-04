@@ -5,7 +5,7 @@ import type { FindWordsInput } from 'server/types'
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
-  const { mutate, data, isPending, isError, error } = useGetWordsMutation()
+  const { mutate, data, isPending, isError } = useGetWordsMutation()
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
