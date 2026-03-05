@@ -18,8 +18,7 @@ export function loadLetterData(): LetterData {
  */
 export function countLetters(str: string): Map<string, number> {
   return [...str]
-    .map((char) => char.toUpperCase())
-    .filter((upper) => /[A-Z]/.test(upper))
+    .filter((char) => /[A-Z]/.test(char))
     .reduce(
       (counts, upper) => counts.set(upper, (counts.get(upper) ?? 0) + 1),
       new Map<string, number>(),
