@@ -1,36 +1,21 @@
-import { readFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import type { LetterData, FindWordsInput, FindWordsResult } from 'server/types'
-import { MAX_LETTERS } from 'server/types'
+import { MAX_LETTERS, MAX_WORD_LENGTH, MIN_WORD_LENGTH } from 'server/types'
+import { loadDictionary } from './dictionary'
+import { countLetters, loadLetterData } from './letters'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const DATA_DIR = join(__dirname, '..', 'data')
-const LETTER_DATA_FILE = 'letter_data.json'
-const DICTIONARY_FILE = 'dictionary.txt'
-
-function loadLetterData(): LetterData {
-  const path = join(DATA_DIR, LETTER_DATA_FILE)
-  return JSON.parse(readFileSync(path, 'utf-8')) as LetterData
+/**
+ * Removes non-alphabetic characters from a string.
+ */
+function sanitizeAlpha(str: string): string {
+  return str.replace(/[^a-zA-Z]/g, '').toUpperCase()
 }
 
-function loadDictionary(): string[] {
-  const path = join(DATA_DIR, DICTIONARY_FILE)
-  const content = readFileSync(path, 'utf-8')
-
-  return content.split('\n').map((line) => line.trim().toLowerCase())
-}
-
-function countLetters(str: string): Map<string, number> {
-  const counts = new Map<string, number>()
-  for (const char of str) {
-    const upper = char.toUpperCase()
-    if (/[A-Z]/.test(upper)) {
-      counts.set(upper, (counts.get(upper) ?? 0) + 1)
-    }
-  }
-
-  return counts
+/**
+ * Returns true if the word length is valid.
+ * Basic word length is usually between 2 and 15 letters.
+ */
+function isValidWordLength(word: string): boolean {
+  return word.length >= MIN_WORD_LENGTH && word.length <= MAX_WORD_LENGTH
 }
 
 /**
@@ -49,11 +34,11 @@ function isFormableFromRack(
   return true
 }
 
+/**
+ * Calculates the score of a word based on the letter data.
+ */
 function calculateWordScore(word: string, letterData: LetterData): number {
-  return word
-    .toUpperCase()
-    .split('')
-    .reduce((sum, char) => sum + letterData[char].score, 0)
+  return [...word].reduce((sum, char) => sum + letterData[char].score, 0)
 }
 
 /**
@@ -69,6 +54,23 @@ function extractLettersNeededFromRack(
   if (idx === -1) return null
 
   return fullWord.slice(0, idx) + fullWord.slice(idx + starter.length)
+}
+
+/**
+ * Returns true if the word can be formed using only letters from the rack.
+ */
+function canFormWord(
+  dictWord: string,
+  starter: string,
+  rackCounts: Map<string, number>,
+): boolean {
+  const lettersNeededFromRack = starter
+    ? extractLettersNeededFromRack(dictWord, starter)
+    : dictWord
+  return (
+    !!lettersNeededFromRack &&
+    isFormableFromRack(lettersNeededFromRack, rackCounts)
+  )
 }
 
 /**
@@ -99,18 +101,12 @@ function checkTileDistribution(
  * mandatory substring (starter). Returns words sorted by score (highest first).
  */
 export function findWords(data: FindWordsInput): FindWordsResult {
-  const letters = data.letters.replace(/[^a-zA-Z]/g, '')
-  const starter = (data.word ?? '').replace(/[^a-zA-Z]/g, '').toLowerCase()
+  const letters = sanitizeAlpha(data.letters)
+  const starter = sanitizeAlpha(data.word ?? '')
 
+  if (!letters) throw new Error('Provide letters parameter')
   if (letters.length > MAX_LETTERS) {
-    return {
-      words: [],
-      message: `You cannot exceed ${MAX_LETTERS} letters in your rack`,
-    }
-  }
-
-  if (!letters || letters.length === 0) {
-    return { words: [], message: 'Provide letters parameter' }
+    throw new Error(`You cannot exceed ${MAX_LETTERS} letters in your rack`)
   }
 
   const letterData = loadLetterData()
@@ -124,28 +120,22 @@ export function findWords(data: FindWordsInput): FindWordsResult {
       starterCounts,
       letterData,
     )
-    if (tileError) {
-      return { words: [], message: tileError }
-    }
+    if (tileError) throw new Error(tileError)
   }
 
-  const results: FindWordsResult['words'] = []
+  const words = dictionary
+    .filter(
+      (dictWord) =>
+        isValidWordLength(dictWord) &&
+        canFormWord(dictWord, starter, rackCounts),
+    )
+    .map((dictWord) => ({
+      word: dictWord,
+      score: calculateWordScore(dictWord, letterData),
+    }))
+    .sort((a, b) => b.score - a.score || a.word.localeCompare(b.word))
 
-  for (const dictWord of dictionary) {
-    const lettersNeededFromRack = starter
-      ? extractLettersNeededFromRack(dictWord, starter)
-      : dictWord
+  if (words.length === 0) throw new Error('No words available')
 
-    if (!lettersNeededFromRack) continue
-    if (isFormableFromRack(lettersNeededFromRack, rackCounts)) {
-      results.push({
-        word: dictWord,
-        score: calculateWordScore(dictWord, letterData),
-      })
-    }
-  }
-
-  results.sort((a, b) => b.score - a.score || a.word.localeCompare(b.word))
-
-  return { words: results }
+  return { words }
 }

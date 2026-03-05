@@ -17,10 +17,19 @@ export type FindWordsInput = {
  */
 export type FindWordsResult = {
   words: { word: string; score: number }[]
-  message?: string
 }
 
 /**
  * Maximum number of letters in a rack.
  */
 export const MAX_LETTERS = 7
+
+/**
+ * Minimum length of a word.
+ */
+export const MIN_WORD_LENGTH = 2
+
+/**
+ * Maximum length of a word.
+ */
+export const MAX_WORD_LENGTH = 15
