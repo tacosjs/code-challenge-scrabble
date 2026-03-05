@@ -5,6 +5,7 @@ type BoardSectionProps = {
   label: string
   value: string | undefined
   setValueFn: (word: string | undefined) => void
+  placeholder?: string
   maxLength?: number
 }
 
@@ -12,9 +13,14 @@ export const BoardSection = ({
   label,
   value,
   setValueFn,
+  placeholder,
   maxLength,
 }: BoardSectionProps) => {
   const id = label.toLowerCase().replace(' ', '-')
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setValueFn(e.target.value)
+
   return (
     <section className="flex flex-col gap-2">
       <label
@@ -27,10 +33,8 @@ export const BoardSection = ({
       <Input
         id={id}
         value={value}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setValueFn(e.target.value)
-        }
-        placeholder="e.g. WIZ"
+        onChange={handleChange}
+        placeholder={placeholder ?? 'e.g. WIZ'}
         maxLength={maxLength}
       />
 

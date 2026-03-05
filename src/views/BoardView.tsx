@@ -56,6 +56,7 @@ export const BoardView = () => {
           label="Your rack"
           value={rackInput}
           setValueFn={setRackInput}
+          placeholder="e.g. AIDOORW"
           maxLength={7}
         />
         <button
