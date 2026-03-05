@@ -1,5 +1,9 @@
 # Scrabble Coding Challenge
 
+The intent is to create an API and a basic frontend to maximize points in a Scrabble game, by suggesting valid words built from your rack and optional board word.
+
+<img width="420" alt="Screenshot 2026-03-05 at 09-25-26 Coding Challenge - Scrabble" src="https://github.com/user-attachments/assets/fdfa396b-794c-437d-9894-2575634780e7" />
+
 ## Getting Started
 
 **Prerequisite:** [Node.js 18+](https://nodejs.org/en)
