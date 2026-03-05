@@ -9,7 +9,7 @@ describe('Scrabble examples', () => {
     })
 
     expect(result.words.length).toBeGreaterThan(0)
-    expect(result.words[0]).toEqual({ word: 'wizard', score: 19 })
+    expect(result.words[0]).toEqual({ word: 'WIZARD', score: 19 })
   })
 
   it('Should return dowar first (highest score) and include draw because rack-only AIDOORW yields valid words ordered by score', () => {
@@ -18,9 +18,9 @@ describe('Scrabble examples', () => {
     })
 
     expect(result.words.length).toBeGreaterThan(0)
-    expect(result.words[0].word).toBe('dowar')
+    expect(result.words[0].word).toBe('DOWAR')
     expect(result.words.map((x) => x.word)).toEqual(
-      expect.arrayContaining(['draw', 'ward', 'wood']),
+      expect.arrayContaining(['DRAW', 'WARD', 'WOOD']),
     )
   })
 

@@ -17,7 +17,6 @@ export type FindWordsInput = {
  */
 export type FindWordsResult = {
   words: { word: string; score: number }[]
-  message?: string
 }
 
 /**
